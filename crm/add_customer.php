@@ -1,17 +1,14 @@
+<?php
 
- <?php
-
+/*
+ * Controller executé lors de l'envoi du formulaire de création d'un client
+ * Ici on délègue la création du client à partir des données de $_POST
+ * et on redirige vers index.php (la liste des clients)
+ */
 if(!empty($_POST)) {
 	include_once 'customers.php';
-	$old_customers = get_all_customers();
 
-	$customer = $_POST;
-	$customer['id'] = uniqid() ; 
-	$old_customers[]=$customer;
+    create_customer($_POST);
 
-	$result = json_encode(["data" => $old_customers]);
-	$file = ('customer.json');
-	file_put_contents($file, $result);
-
-	include "index.php";	
-} 
+	include "index.php";
+}
