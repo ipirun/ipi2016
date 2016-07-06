@@ -1,52 +1,6 @@
 <?php
-/**
-* Créer un galerie a partir d'un dossier
-*/
-function recuperation_image($folder_to_follow){
-
-	$files = scandir($folder_to_follow);
-	unset($files[0]);
-	unset($files[1]);
-
-	return $files;
-}
-//TODO Creer la routine de pagination
-function pagination($no_file){
-
-}
-
-function afficher_galerie($no_file){
-	$folder_to_scan = "images";
-	$files = recuperation_image($folder_to_scan);
-	$max_file = count($files)+2;
-	$limit_img = $no_file+9;
-
-	//foreach ($files as $key => $file) {
-	 //Pour chaque image
-	//  $tabimg = 2;
-	$tabimg = $no_file;
-	 do {
-		 echo "<div class='row'>";
-		 //echo "f: $key : $file <br/>";
-		 for ($i=0 ; $i<3 ; $i++){
-			 if($tabimg < $max_file){
-				 echo "<div class='col-xs-3'>";
-				 echo "<img src='".$folder_to_scan."/".$files[$tabimg]."' class='thumbnail img-responsive center-block' alt='".$files[$tabimg]."'/>";
-				 echo "</div>";
-				 $tabimg++;
-			 }else {
-			 	# code...
-				echo "</div>";
-				return;
-			 }
-		 }
-		 //echo '<hr/>';
-		 echo "</div>";
-		// } while ($tabimg < (count($files)+2));
-	} while ($tabimg < $limit_img);
-}
-
-// $folder_to_scan = "images";
+include 'gallery.php';
+//Recuperation du traitement de la gallerie
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,20 +8,7 @@ function afficher_galerie($no_file){
 		<meta charset="utf-8">
 		<title>ma joli page woahoooooooo</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
-		<style>
-		 	.col-xs-3{
-				float:none;
-				display:inline-block;
-				vertical-align:middle;
-				text-align: center;
-			}
-
-			.starter-template .col-xs-3 img {
-				max-height:240px;
-				width:100%;
-			}
-
-		</style>
+		<link rel="stylesheet" href="gallery.css" media="screen" title="no title" charset="utf-8">
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -99,59 +40,53 @@ function afficher_galerie($no_file){
 		 <?php //recuperation des images
 
 		 if(isset($_GET['pagination'])){
+			 //On recupere en GET la pagination de l'image
 			 $pagination = $_GET['pagination'];
 		 }else{
+			 //On initialise la pagination a 2
 			 $pagination = 2;
 		 }
-		 afficher_galerie($pagination);
 
-		 if ($pagination > 2) { ?>
+		 //**************
+		 //	GALLERIE
+		 //**************
+		 afficher_galerie($pagination);
+		 //Traitement de l'affichage de la galerie
+
+		 //**************
+		 //	PAGINATION
+		 //**************
+		 if ($pagination > 2) {
+			 //Page precedente
+		?>
 			<a href="index.php?pagination=<?php echo $pagination-9; ?>">Page precedente</a>
 			<?php
 		 }
 		 if($pagination < 20){
+			 //Page suivante
 		 ?>
 		 <a href="index.php?pagination=<?php echo $pagination+9; ?>">Page suivante</a>
-		 <?php
-		 }
-	  //  $files = recuperation_image($folder_to_scan);
-	  //  //foreach ($files as $key => $file) {
-	  //  	//Pour chaque image
-		// 	$tabimg = 2;
-		// 	do {
-		// 	echo "<div class='row'>";
-	  //  	//echo "f: $key : $file <br/>";
-		// 	for ($i=0 ; $i<3 ; $i++){
-		// 		echo "<div class='col-md-4'>";
-	  //  		echo "<img src='".$folder_to_scan."/".$files[$tabimg]."' class='thumbnail img-responsive' alt='".$files[$tabimg]."'/>";
-		// 		echo "</div>";
-		// 		$tabimg++;
-		// 	}
-		// 	//echo '<hr/>';
-		// 	echo "</div>";
-		// } while ($tabimg < (count($files)+2));
-	   //}
-	   ?>
-	 </div>
+		 <?php } ?>
 
-	 <div id="modal-preview" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Modal title</h4>
-      </div>
-      <div class="modal-body">
-        <p>One fine body&hellip;</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+	 </div><!-- /.starter-template -->
    </div><!-- /.container -->
+
+	 <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+		 <div class="modal-dialog modal-lg">
+			 <div class="modal-content">
+				 <div class="modal-header">
+					 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					 <h4 class="modal-title">Modal title</h4>
+				 </div>
+				 <div class="modal-body">
+					 <img src="" class="img-responsive"/>
+				 </div>
+				 <div class="modal-footer">
+					 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				 </div>
+			 </div><!-- /.modal-content -->
+		 </div><!-- /.modal-dialog -->
+	 </div><!-- /.modal -->
 
 
 
@@ -160,5 +95,7 @@ function afficher_galerie($no_file){
    <!-- Placed at the end of the document so the pages load faster -->
 	 	<script src="http://code.jquery.com/jquery-2.2.4.min.js" charset="utf-8"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" charset="utf-8"></script>
+		<script src="gallery.js" charset="utf-8"></script>
+
 	</body>
 </html>
