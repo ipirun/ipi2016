@@ -67,7 +67,7 @@ $customers = get_all_customers();
                                         <?php echo $customer["company"] ?>
                                     </td>
                                     <td>
-                                        <?php echo $customer["signed"] ?>
+                                        <?php echo get_status($customer["signed"]) ?>
                                     </td>
                                     <td>
                                         <a href="edit.php?id=<?php echo $customer['id'] ?>" class="btn btn-primary">
@@ -78,7 +78,7 @@ $customers = get_all_customers();
                                             <button type="submit" name="button" class="btn btn-danger">
                                                 <i class="glyphicon glyphicon-trash"></i>
                                             </button>
-                                        </form>                                        
+                                        </form>
                                     </td>
                                 </tr>
                         <?php

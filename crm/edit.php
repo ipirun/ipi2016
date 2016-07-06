@@ -3,7 +3,6 @@ include 'customers.php';
 
 if(isset($_GET["id"])) {
     $customer = get_one_customer($_GET["id"]);
-    $customer["signed"] = "done";
 ?>
 <!DOCTYPE html>
 <html>

@@ -121,3 +121,15 @@ function write_in_json($data)
     $file = (DB_FILE);
     file_put_contents($file, $result);
 }
+
+
+function get_status($status)
+{
+    $lookup = [
+        "assigned" => "<span class='label label-warning'>Attribué à un commercial</span>",
+        "meeting" => "<span class='label label-info'>RDV pris</span>",
+        "done" => "<span class='label label-success'>Contrat signé</span>",
+    ];
+
+    return $lookup[$status];
+}
