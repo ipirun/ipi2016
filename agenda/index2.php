@@ -1,5 +1,3 @@
-
-
 <?php
 /**
  * The main template file.
@@ -20,13 +18,15 @@
   <meta charset="utf-8">
   <title>Projet Agenda</title>
   <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="./css/bootstrap.css" >
+<link rel="stylesheet" href="../crm/css/bootstrap.css" >
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="./js/bootstrap.js"></script>
+</head>
 
+<body>
 <div class="container">
 <div class="row">
-<
+
 <div id="banner" class="jumbotron">
 <h1 style="color:black;">Agenda</h1>
 <div ><p style="color:black;">Ajout de rendez-vous en fonction des disponibilité des commerciaux
@@ -42,7 +42,7 @@
 </head>
 
 
-<body>
+
 
 
   <!-- Mon bouton déroularant
@@ -51,57 +51,61 @@
 
 <div class="container">
 <div class="row">
-  <div class="column">
-    <div class="col-md-12">
+    <div class="col-md-6">
 
       <?php
       	if(isset($_POST["client"])){
-
-
       		$data = array();
       		$data = file_get_contents("data.json");
       		$data = (array) json_decode($data);
-      		$data[$_POST["creneau"]] = $_POST;
-      		//print_r($data);
+
+            $creneau = $_POST["date"] . " " . $_POST["time"];
+    		$client = $_POST["client"];
+    		$commercial = $_POST["commercial"];
+
+    		$data[$creneau] = compact('creneau', 'client', 'commercial');
+
       		file_put_contents("data.json",json_encode($data));
       	}
       ?>
-      	<form action="index2.php" method="post">
-       <p>nom : <select name="commercial">
-        <option value="commercial2">Mr PAYET</option>
-        <option value="commercial1">Mr GRONDIN</option>
-        <option value="commercial3">Mr TURPIN</option>
-      </select></p>
+      <h2>Ajouter un créneau</h2>
+      	<form action="index2.php" method="post" class="form">
+        <label for="commercial">nom : </label>
+        <select name="commercial" class="form-control">
+            <option value="commercial2">Mr PAYET</option>
+            <option value="commercial1">Mr GRONDIN</option>
+            <option value="commercial3">Mr TURPIN</option>
+        </select>
 
-       <p>creneau : <select name="creneau">
-         <option value="2016-07-07 09:00">Jeudi 9h</option>
-         <option value="2016-07-07 10:00">Jeudi 10h</option>
-         <option value="2016-07-07 11:00">Jeudi 11h</option>
-         <option value="2016-07-07 12:00">Jeudi 12h</option>
-        <option value="2016-07-07 13:00">Jeudi 13h</option>
-        <option value="2016-07-07 14:00">Jeudi 14h</option>
-        <option value="2016-07-07 15:00">jeudi 15h</option>
-        <option value="2016-07-07 16:00">jeudi 16h</option>
-        <option value="2016-07-07 17:00">jeudi 17h</option>
-        <option value="2016-07-07 18:00">jeudi 18h</option>
-        <option value="2016-07-07 19:00">jeudi 19h</option>
-      </select></p>
-      client: <input type="text" name="client"><br>
-       <p><input type="submit" value="OK"></p>
+        <label for="creneau">creneau : </label>
+        <!-- <select name="creneau" class="form-control">
+            <option value="2016-07-07 09:00">Jeudi 9h</option>
+            <option value="2016-07-07 10:00">Jeudi 10h</option>
+            <option value="2016-07-07 11:00">Jeudi 11h</option>
+            <option value="2016-07-07 12:00">Jeudi 12h</option>
+            <option value="2016-07-07 13:00">Jeudi 13h</option>
+            <option value="2016-07-07 14:00">Jeudi 14h</option>
+            <option value="2016-07-07 15:00">jeudi 15h</option>
+            <option value="2016-07-07 16:00">jeudi 16h</option>
+            <option value="2016-07-07 17:00">jeudi 17h</option>
+            <option value="2016-07-07 18:00">jeudi 18h</option>
+            <option value="2016-07-07 19:00">jeudi 19h</option>
+        </select> -->
+
+        <label for="client">Date: </label> <input class="form-control" type="date" name="date">
+        <label for="client">Heure: </label> <input class="form-control" type="time" name="time">
+
+        <label for="client">client: </label>
+        <input type="text" name="client" class="form-control"><br>
+        <input type="submit" class="btn btn-primary" value="OK">
 
       </form>
 
 
     </div>
-  </div>
 
 
 
-<!-- Agenda
-**/ -->
-<div class="container">
-<div class="row">
-  <div class="column">
     <div class="col-md-6">
 
 <table class="table">
@@ -119,11 +123,11 @@ if (isset($_GET['jour']))
     $jour = intval($_GET['jour']);
 }
 
-if ($_GET['week'] == "pre") // Si on veut afficher la semaine précédente
+if (isset($_GET['week']) && $_GET['week'] == "pre") // Si on veut afficher la semaine précédente
 {
     $jour = $jour + 7;
 }
-elseif ($_GET['week'] == "next") // Si on veut afficher la semaine suivante
+elseif (isset($_GET['week']) && $_GET['week'] == "next") // Si on veut afficher la semaine suivante
 {
     $jour = $jour - 7;
 }
@@ -146,9 +150,9 @@ $dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,date("n"),date("d")-$jour+1,date(
 $dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,date("n"),date("d")-$jour+7,date("y")));
 
 echo '<div id="titreMois" align="center">
-		<a href="test.php?week=pre&jour='.$jour.'"><-</a>
+		<a href="index2.php?week=pre&jour='.$jour.'"><-</a>
 		Semaine '.$num_week.'
-		<a href="test.php?week=next&jour='.$jour.'">-></a><br/>
+		<a href="index2.php?week=next&jour='.$jour.'">-></a><br/>
     du '.$dateDebSemaineFr.' au '.$dateFinSemaineFr.'</div>';
 
 $jourTexte = array('',1=>'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche');
@@ -172,10 +176,10 @@ switch($nom_mois)
 
 echo '<br/>
 <div id="titreMois" align="center">
-    <h2>'.$nom_mois.' '.$annee.'</h2>
+    <h2 style="margin-top: 0px;">'.$nom_mois.' '.$annee.'</h2>
 </div>';
 
-echo '<table border="1" align="center">';
+echo '<table border="1" align="center" class="table table-condensed">';
 
     // en tête de colonne
     echo '<tr>';
@@ -201,12 +205,11 @@ echo '<table border="1" align="center">';
             for ($j = 1; $j <= 7; $j++)
             {
 				$reserver="";
-				$creneau=date("Y-m-d H:00", mktime($plageH[$h],0,0,date("n"),date("d")-$jour+$j,date("y")));
+				$creneau=date("Y-m-d H:00", mktime((int)$plageH[$h],0,0,date("n"),date("d")-$jour+$j,date("y")));
 				foreach($data as $z => $tt){
 					//echo $creneau;
 					if ($z==$creneau){
-
-							$reserver="réserver";
+						$reserver="<span class='label label-danger'>Réservé</span>";
 					}
 				}
 
