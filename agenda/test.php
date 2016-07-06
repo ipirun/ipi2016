@@ -12,10 +12,6 @@ $data = (array) json_decode($data);
 
 //print_r($data);
 
-foreach($data as $z => $tt){
-					print_r($z);
-				}
-
 $jour = date("w"); // numéro du jour actuel
  
 if (isset($_GET['jour']))
@@ -108,7 +104,7 @@ echo '<table border="1" align="center">';
 				$reserver="";
 				$creneau=date("Y-m-d H:00", mktime($plageH[$h],0,0,date("n"),date("d")-$jour+$j,date("y")));
 				foreach($data as $z => $tt){
-					echo $creneau;
+					//echo $creneau;
 					if ($z==$creneau){
 				
 							$reserver="ok";

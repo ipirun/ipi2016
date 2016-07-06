@@ -12,15 +12,15 @@
 		$data = file_get_contents("data.json");
 		$data = (array) json_decode($data);
 		$data[$_POST["creneau"]] = $_POST;
-		print_r($data);
+		//print_r($data);
 		file_put_contents("data.json",json_encode($data));
 	}
 ?>
 	<form action="essaie.php" method="post">
  <p>nom : <select name="commercial">
   <option value="commercial2">Commercial2</option>
-  <!--<option value="commercial1">Commercial1</option>
-  <option value="commercial3">Commercial3</option>-->
+  <option value="commercial1">Commercial1</option>
+  <option value="commercial3">Commercial3</option>
 </select></p>
 
  <p>creneau : <select name="creneau">
