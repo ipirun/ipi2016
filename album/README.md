@@ -21,5 +21,5 @@ pagination par un GET d'une variable
 
 - Kelly HOARAU
 - Matthias BOYER
-- Reynald KAISSE
+- Raynald KAISSE
 - Matthieu GURAK
