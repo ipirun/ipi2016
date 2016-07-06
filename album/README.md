@@ -19,7 +19,7 @@ pagination par un GET d'une variable
 
 ## Participants
 
-- Kelly HOAREAU
+- Kelly HOARAU
 - Matthias BOYER
 - Reynald KAISSE
 - Matthieu GURAK
