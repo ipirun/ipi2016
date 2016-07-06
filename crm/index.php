@@ -67,12 +67,18 @@ $customers = get_all_customers();
                                         <?php echo $customer["company"] ?>
                                     </td>
                                     <td>
-                                        <?php echo $customer["signed"] ?>
+                                        <?php echo get_status($customer["signed"]) ?>
                                     </td>
                                     <td>
                                         <a href="edit.php?id=<?php echo $customer['id'] ?>" class="btn btn-primary">
                                             <i class="glyphicon glyphicon-pencil"></i> Edit
                                         </a>
+                                        <form method="post" style="display:inline;" action="delete_customer.php">
+                                            <input type="hidden" name="id" value="<?php echo $customer['id'] ?>">
+                                            <button type="submit" name="button" class="btn btn-danger">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                         <?php

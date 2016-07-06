@@ -1,6 +1,18 @@
 <?php
+
+/*
+ * Constante contenant l'emplacement de la base de données
+ */
 const DB_FILE = "customer.json";
 
+
+/**
+ * Retourne toute la liste des clients de la base de données
+ *
+ * TODO: Faire de requete paramètrables avec limites/Order
+ * @param  $params    array  Paramètre pour la recherche liste
+ * @return $customers array  Représente la liste des Customers
+ */
 function get_all_customers($params=null)
 {
     // On va lire le fichier customer.json qui contient la liste des clients
@@ -12,6 +24,14 @@ function get_all_customers($params=null)
     return $customers["data"];
 }
 
+
+/**
+ * Cherche le client en base de données et renvoie le client sous forme
+ * d'array php
+ *
+ * @param  $id              string  L'Identifiant unique du Customer
+ * @return $result_customer array   Représente le customer recherché
+ */
 function get_one_customer($id)
 {
     $customers = get_all_customers();
@@ -23,13 +43,93 @@ function get_one_customer($id)
             $result_customer = $customer;
         }
     }
-
-    return json_encode($result_customer);
+    return $result_customer;
 }
 
-function write($data)
+
+/**
+ * Cherche le client en base de données et le modifie puis persiste en base
+ * de données
+ *
+ * @param $id string   L'Identifiant unique du Customer
+ * @param $data array  Contient les nouvelles valeurs pour le client
+ */
+function edit_one_customer($id, $values)
 {
-    // $fp = fopen('customer.json', 'w');
-    // fwrite($fp, json_encode($data));
-    // fclose($fp);
+    $customers = get_all_customers();
+
+    foreach ($customers as $index => $customer) {
+        if ($customer["id"] == $id) {
+            $customers[$index]["company"] = $values["company"];
+            $customers[$index]["firstname"] = $values["firstname"];
+            $customers[$index]["lastname"] = $values["lastname"];
+            $customers[$index]["signed"] = $values["signed"];
+        }
+    }
+
+    write_in_json($customers);
+
+}
+
+
+/**
+ * Cherche le client en base de données et l'efface et persiste en base de données
+ *
+ * @param $id string   L'Identifiant unique du Customer
+ */
+function delete_one_customer($id)
+{
+    $customers = get_all_customers();
+
+    foreach ($customers as $index => $customer) {
+        if ($customer["id"] == $id) {
+            unset($customers[$index]);
+        }
+    }
+
+    write_in_json($customers);
+}
+
+/**
+ * Crée un nouveau client avec un uniqid puis le persiste dans la base de données
+ *
+ * @see uniqid
+ * @param $data array Contient les nouvelles valeurs pour le client
+ */
+function create_customer($values)
+{
+    $old_customers = get_all_customers();
+
+	$customer = $values;
+	$customer['id'] = uniqid() ;
+
+    //Ajout nouveau client à l'array contenant les anciens clients
+	$old_customers[] = $customer;
+
+    write_in_json($old_customers);
+}
+
+
+/**
+ * Persiste les données dans la base de données json
+ *
+ * @param $data array Contient la liste entières des clients à persister
+ */
+function write_in_json($data)
+{
+    $result = json_encode(["data" => $data]);
+    $file = (DB_FILE);
+    file_put_contents($file, $result);
+}
+
+
+function get_status($status)
+{
+    $lookup = [
+        "assigned" => "<span class='label label-warning'>Attribué à un commercial</span>",
+        "meeting" => "<span class='label label-info'>RDV pris</span>",
+        "done" => "<span class='label label-success'>Contrat signé</span>",
+    ];
+
+    return $lookup[$status];
 }
